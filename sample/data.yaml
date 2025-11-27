@@ -1,0 +1,7 @@
+# YOLO dataset configuration for bsort sample data
+path: ./sample
+train: train/images
+val: val/images
+
+nc: 3
+names: ['Dark Blue', 'Light Blue', 'Others']

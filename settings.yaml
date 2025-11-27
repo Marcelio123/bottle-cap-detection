@@ -1,0 +1,83 @@
+# bsort configuration file - YOLO10 Nano
+# This file contains all settings for YOLO training
+
+# Model configuration
+model:
+  type: "yolo11n.pt"  # YOLO10 Nano model
+
+# Dataset configuration
+data:
+  yaml_path: "sample/data.yaml"  # Path to YOLO dataset config
+
+# Training configuration
+training:
+  epochs: 100  # Number of training epochs
+  imgsz: 224  # Image size for training
+  batch: 16  # Batch size (-1 for auto)
+  device: "cuda"  # Device (cuda, cpu, or device ID like 0,1,2,3)
+  patience: 10  # Early stopping patience (epochs without improvement)
+
+  # YOLO built-in augmentations
+  augmentation:
+    hsv_h: 0.0  # HSV-Hue augmentation (fraction)
+    hsv_s: 0.0  # HSV-Saturation augmentation (fraction)
+    hsv_v: 0.0  # HSV-Value augmentation (fraction)
+    degrees: 15  # Image rotation (+/- deg)
+    translate: 0.1  # Image translation (+/- fraction)
+    scale: 0.5  # Image scale (+/- gain)
+    shear: 5  # Image shear (+/- deg)
+    perspective: 0.0008  # Image perspective (+/- fraction), range 0-0.001
+    flipud: 0.5  # Image flip up-down (probability)
+    fliplr: 0.5  # Image flip left-right (probability)
+    mosaic: 1.0  # Mosaic augmentation (probability)
+    mixup: 0.3  # MixUp augmentation (probability)
+
+# Offline data augmentation configuration
+# Used by 'bsort augment' command for pre-training dataset augmentation
+augmentation_offline:
+  # Geometric transformations
+  rotation_limit: 30  # Random rotation angle limit (+/- degrees)
+  shift_limit: 0.1  # Random shift/translation limit (+/- fraction)
+  scale_limit: 0.2  # Random scale/zoom limit (+/- fraction)
+
+  # Advanced transformations
+  blur_prob: 0.3  # Probability of applying Gaussian blur
+  noise_prob: 0.3  # Probability of applying Gaussian noise
+
+  # Note: Color space augmentations (HSV, RGB shifts) are intentionally
+  # disabled as per user requirements. Only geometric and advanced
+  # transformations are applied.
+
+# Output configuration
+output:
+  project: "run_bsort"  # Project directory
+  name: "train"  # Experiment name
+  save_period: 10  # Save checkpoint every N epochs
+
+# Logging configuration
+logging:
+  verbose: true  # Verbose output
+  plots: true  # Save training plots
+  wandb: true  # Use Weights & Biases
+
+# Weights & Biases configuration
+# W&B integration uses Ultralytics built-in callbacks with environment variables
+# Requires: "wandb": true in ~/.config/Ultralytics/settings.json
+# The training script sets env vars (WANDB_PROJECT, WANDB_NAME, etc.) before training
+wandb:
+  enabled: true  # Enable/disable W&B logging (sets WANDB_MODE=disabled if false)
+  project: "bsort-training"  # W&B project name (env: WANDB_PROJECT)
+  name: null  # Run name, null = auto-generated (env: WANDB_NAME)
+  tags: []  # List of tags for the run (env: WANDB_TAGS as comma-separated string)
+  notes: null  # Notes for the run (env: WANDB_NOTES)
+
+# Inference configuration
+inference:
+  model_path: "run_bsort/train/weights/best.onnx"  # Path to ONNX model file
+  confidence_threshold: 0.25  # Minimum confidence score for detections
+  iou_threshold: 0.45  # IoU threshold for Non-Maximum Suppression
+  imgsz: 224  # Input image size (should match training size)
+  class_names:  # Class names for your model
+    - "Dark Blue"
+    - "Light Blue"
+    - "Others"
