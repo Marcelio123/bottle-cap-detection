@@ -15,11 +15,11 @@ A machine learning tool for detecting and classifying bottle caps into three cat
 - [Results](#results)
 - [Performance Benchmarks](#performance-benchmarks)
 - [Project Structure](#project-structure)
+- [Testing](#testing)
 - [Docker Support](#docker-support)
 - [Approach Details](#approach-details)
 - [Troubleshooting](#troubleshooting)
 - [Future Improvements](#future-improvements)
-- [References](#references)
 
 ## Overview
 
@@ -471,6 +471,11 @@ bsort/
 │   ├── infer_houghcircle.py   # Traditional CV inference
 │   ├── augment.py             # Data augmentation pipeline
 │   └── sanity_check.py        # Dataset validation
+├── tests/                      # Unit tests
+│   ├── conftest.py            # Shared test fixtures
+│   ├── test_config.py         # Configuration tests
+│   ├── test_infer.py          # Inference pipeline tests
+│   └── test_export.py         # ONNX export tests
 ├── sample/                     # Sample dataset
 │   ├── train/
 │   │   ├── images/            # Training images
@@ -486,6 +491,61 @@ bsort/
 ├── pyproject.toml            # Package metadata and dependencies
 ├── DOCKER.md                 # Docker setup guide
 └── README.md                 # This file
+```
+
+## Testing
+
+The project includes comprehensive unit tests for core functionality with 22% overall coverage.
+
+### Running Tests
+
+**Install test dependencies:**
+```bash
+pip install -e ".[dev]"
+```
+
+**Run all tests:**
+```bash
+pytest
+```
+
+**Run with coverage report:**
+```bash
+pytest --cov=bsort --cov-report=term-missing
+```
+
+**Run specific test file:**
+```bash
+pytest tests/test_infer.py -v
+```
+
+### Test Coverage
+
+| Module | Coverage | Tests |
+|--------|----------|-------|
+| `export.py` | 100% ✅ | 10 tests |
+| `config.py` | 100% ✅ | 5 tests |
+| `infer.py` | 73% | 15 tests |
+
+**Key test areas:**
+- ✅ Image preprocessing and normalization
+- ✅ Non-Maximum Suppression (NMS) algorithm
+- ✅ ONNX model export and validation
+- ✅ Configuration loading and error handling
+- ✅ Bounding box transformations and clipping
+
+### Test Commands
+
+```bash
+# Run tests matching a pattern
+pytest -k "export" -v
+
+# Generate HTML coverage report
+pytest --cov=bsort --cov-report=html
+# Open htmlcov/index.html in browser
+
+# Run tests with detailed output
+pytest -v -s
 ```
 
 ## Docker Support
