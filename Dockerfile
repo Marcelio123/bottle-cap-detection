@@ -15,7 +15,7 @@ COPY pyproject.toml ./
 COPY bsort/ ./bsort/
 
 # Install dependencies into a temporary folder (no cache → smaller)
-RUN pip install --no-cache-dir --prefix=/install -e .
+RUN pip install --no-cache-dir --prefix=/install .
 
 # ===============================
 #   FINAL RUNTIME STAGE
